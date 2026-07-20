@@ -8,6 +8,7 @@
         "laravel-best-practices",
         "socialite-development",
         "pest-testing",
+        "echo-development",
         "tailwindcss-development",
         "deploying-laravel-cloud"
     ]

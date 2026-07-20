@@ -15,10 +15,11 @@ class Conversation extends Model
     protected $fillable = [
         'type',
         'title',
+        'owner_id',
         'created_by',
+        'private_key',
         'last_message_id',
         'last_message_at',
-  
         'meta',
     ];
 
@@ -31,6 +32,10 @@ class Conversation extends Model
             'is_pinned' => 'boolean',
             'meta' => 'array',
         ];
+    }
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 
     public function creator(): BelongsTo

@@ -15,6 +15,7 @@ class ShowConversation
                 'users.avatar',
                 'avatar',
                 'creator:id,name',
+                'owner:id,name',
             ])
             ->withCount('users')
             ->withPivot([

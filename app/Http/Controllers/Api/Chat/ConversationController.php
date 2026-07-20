@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Chat;
 
 use App\Domain\Chat\Actions\ChatStore;
 use App\Domain\Chat\Actions\DeleteConversation;
+use App\Domain\Chat\Actions\LeaveConversation;
 use App\Domain\Chat\Actions\PinConversation;
 use App\Domain\Chat\Actions\ShowConversation;
 use App\Domain\Chat\Actions\UnpinConversation;
@@ -27,6 +28,7 @@ class ConversationController extends Controller
         protected DeleteConversation $deleteConversation,
         protected PinConversation $pinConversation,
         protected UnpinConversation $unpinConversation,
+        protected LeaveConversation $leaveConversation
     ) {
     }
 
@@ -117,5 +119,15 @@ class ConversationController extends Controller
         );
     }
 
-    
+    public function leave(Request $request, Conversation $conversation): JsonResponse
+    {
+        $this->leaveConversation->handle(
+            user: $request->user(),
+            conversation: $conversation
+        );
+
+        return $this->success(
+            message: __('messages.chat.left')
+        );
+    }
 }

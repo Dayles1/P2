@@ -2,6 +2,7 @@
 
 namespace App\Domain\Chat\Actions;
 
+use App\Domain\Chat\Enums\ConversationLeftReason;
 use App\Domain\Chat\Models\Conversation;
 use App\Domain\Chat\Models\ConversationUser;
 use App\Domain\Identity\Models\User;
@@ -16,6 +17,7 @@ class DeleteConversation
             $pivot = ConversationUser::query()
                 ->where('conversation_id', $conversation->id)
                 ->where('user_id', $user->id)
+                ->whereNull('left_at')
                 ->first();
 
             if (! $pivot) {
@@ -24,23 +26,12 @@ class DeleteConversation
                 ]);
             }
 
-            ConversationUser::query()
-                ->where('conversation_id', $conversation->id)
-                ->where('user_id', $user->id)
-                ->update([
-                    'left_at' => now(),
-                    'is_hidden' => true,
-                    'is_pinned' => false,
-                ]);
-
-            $remaining = ConversationUser::query()
-                ->where('conversation_id', $conversation->id)
-                ->whereNull('left_at')
-                ->count();
-
-            if ($remaining === 0) {
-                $conversation->delete();
-            }
+            $pivot->update([
+                'left_at'     => now(),
+                'left_reason' => ConversationLeftReason::LEFT,
+                'is_hidden'   => true,
+                'is_pinned'   => false,
+            ]);
         });
     }
 }

@@ -27,12 +27,20 @@ class ConversationShowResource extends JsonResource
                     'avatar' => $this->creator?->avatar?->url(),
                 ];
             }),
+            'owner_id' => $this->owner_id,
+            'owner' => $this->whenLoaded('owner', function () {
+                return [
+                    'id' => $this->owner?->id,
+                    'name' => $this->owner?->name,
+                    'avatar' => $this->owner?->avatar?->url(),
+                ];
+            }),
             'is_locked' => (bool) $this->is_locked,
             'is_archived' => (bool) $this->is_archived,
             'meta' => $this->meta,
             'members_count' => $this->users_count,
-            'created_at' => $formatter->format($this->created_at,$user),
-            'updated_at' => $formatter->format($this->updated_at,$user),
+            'created_at' => $formatter->format($this->created_at, $user),
+            'updated_at' => $formatter->format($this->updated_at, $user),
         ];
     }
 }

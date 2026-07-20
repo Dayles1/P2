@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
             ->firstOrFail();
 
         User::factory()
-            ->count(100)
+            ->count(30)
             ->create()
             ->each(function (User $user) use ($userRole): void {
                 // $user->roles()->attach($userRole->id);

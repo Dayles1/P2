@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('type')->index();
+            $table->string('private_key')->nullable()->unique();
             $table->string('title')->nullable();
 
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
