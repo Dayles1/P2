@@ -1,0 +1,14 @@
+{
+    "agents": [
+        "codex"
+    ],
+    "cloud": true,
+    "guidelines": true,
+    "skills": [
+        "laravel-best-practices",
+        "socialite-development",
+        "pest-testing",
+        "tailwindcss-development",
+        "deploying-laravel-cloud"
+    ]
+}
