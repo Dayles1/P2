@@ -17,7 +17,7 @@ class SystemMessageService
         return $this->create(
             conversation: $conversation,
             actor: $actor,
-            action: 'member_left',
+            translationKey: 'messages.chat.system.member_left',
             targets: [],
             extra: array_merge($extra, [
                 'new_owner' => $newOwner ? $this->userPayload($newOwner) : null,
@@ -34,7 +34,7 @@ class SystemMessageService
         return $this->create(
             conversation: $conversation,
             actor: $actor,
-            action: 'members_added',
+            translationKey: 'messages.chat.system.members_added',
             targets: $this->normalizeUsers($targets),
             extra: $extra,
         );
@@ -49,7 +49,7 @@ class SystemMessageService
         return $this->create(
             conversation: $conversation,
             actor: $actor,
-            action: 'members_removed',
+            translationKey: 'messages.chat.system.members_removed',
             targets: $this->normalizeUsers($targets),
             extra: $extra,
         );
@@ -65,11 +65,11 @@ class SystemMessageService
         return $this->create(
             conversation: $conversation,
             actor: $actor,
-            action: 'member_joined',
+            translationKey: 'messages.chat.system.member_joined',
             targets: [],
             extra: array_merge($extra, [
                 'source' => [
-                    'type' => $joinType,   // simple | link | code
+                    'type' => $joinType,
                     'value' => $sourceValue,
                 ],
             ]),
@@ -86,7 +86,7 @@ class SystemMessageService
         return $this->create(
             conversation: $conversation,
             actor: $actor,
-            action: 'conversation_renamed',
+            translationKey: 'messages.chat.system.conversation_renamed',
             targets: [],
             extra: array_merge($extra, [
                 'old_title' => $oldTitle,
@@ -104,7 +104,7 @@ class SystemMessageService
         return $this->create(
             conversation: $conversation,
             actor: $actor,
-            action: 'avatar_changed',
+            translationKey: 'messages.chat.system.avatar_changed',
             targets: [],
             extra: array_merge($extra, [
                 'avatar_id' => $avatarId,
@@ -121,7 +121,7 @@ class SystemMessageService
         return $this->create(
             conversation: $conversation,
             actor: $actor,
-            action: 'message_pinned',
+            translationKey: 'messages.chat.system.message_pinned',
             targets: [],
             extra: array_merge($extra, [
                 'message_id' => $messageId,
@@ -132,13 +132,23 @@ class SystemMessageService
     private function create(
         Conversation $conversation,
         ?User $actor,
-        string $action,
+        string $translationKey,
         array $targets = [],
         array $extra = []
     ): Message {
+        $replacements = [
+            'actor' => $actor?->name ?? __('messages.chat.system.system_user'),
+            'targets' => collect($targets)
+                ->pluck('name')
+                ->filter()
+                ->implode(', '),
+        ];
+
         $meta = [
-            'action' => $action,
+            'action' => $translationKey,
             'display' => 'system',
+            'translation_key' => $translationKey,
+            'translation_params' => $replacements,
             'actor' => $actor ? $this->userPayload($actor) : null,
             'targets' => $targets,
             'conversation' => [
@@ -153,7 +163,7 @@ class SystemMessageService
             'conversation_id' => $conversation->id,
             'user_id' => $actor?->id,
             'type' => 'system',
-            'body' => $this->buildBody($action, $actor, $targets, $extra),
+            'body' => __($translationKey, $replacements),
             'meta' => $meta,
         ]);
     }
@@ -185,46 +195,5 @@ class SystemMessageService
         }
 
         return array_values($payloads);
-    }
-
-    private function buildBody(
-        string $action,
-        ?User $actor,
-        array $targets,
-        array $extra = []
-    ): string {
-        $actorName = $actor?->name ?? 'System';
-        $targetNames = collect($targets)
-            ->pluck('name')
-            ->filter()
-            ->implode(', ');
-
-        return match ($action) {
-            'member_left' => isset($extra['new_owner']['name']) && $extra['new_owner']['name']
-                ? "{$actorName} left the conversation. Ownership moved to {$extra['new_owner']['name']}."
-                : "{$actorName} left the conversation.",
-
-            'members_added' => $targetNames !== ''
-                ? "{$actorName} added {$targetNames} to the conversation."
-                : "{$actorName} added members to the conversation.",
-
-            'members_removed' => $targetNames !== ''
-                ? "{$actorName} removed {$targetNames} from the conversation."
-                : "{$actorName} removed members from the conversation.",
-
-            'member_joined' => isset($extra['source']['type']) && $extra['source']['type']
-                ? "{$actorName} joined the conversation via {$extra['source']['type']}."
-                : "{$actorName} joined the conversation.",
-
-            'conversation_renamed' => isset($extra['new_title']) && $extra['new_title']
-                ? "{$actorName} changed the conversation title to \"{$extra['new_title']}\"."
-                : "{$actorName} changed the conversation title.",
-
-            'avatar_changed' => "{$actorName} changed the conversation avatar.",
-
-            'message_pinned' => "{$actorName} pinned a message.",
-
-            default => "{$actorName} performed an action.",
-        };
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Chat;
 
 use App\Domain\Chat\Actions\ChatStore;
-use App\Domain\Chat\Actions\DeleteConversation;
 use App\Domain\Chat\Actions\LeaveConversation;
 use App\Domain\Chat\Actions\PinConversation;
 use App\Domain\Chat\Actions\ShowConversation;
@@ -25,7 +24,6 @@ class ConversationController extends Controller
         protected ChatStore $chatStore,
         protected ShowConversation $showConversation,
         protected UpdateConversation $updateConversation,
-        protected DeleteConversation $deleteConversation,
         protected PinConversation $pinConversation,
         protected UnpinConversation $unpinConversation,
         protected LeaveConversation $leaveConversation

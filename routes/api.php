@@ -83,7 +83,7 @@ Route::middleware('auth:sanctum')->prefix('conversations')->controller(Conversat
     Route::post('/', 'store');
     Route::get('{conversation}', 'show');
     Route::patch('{conversation}', 'update');
-    Route::delete('{conversation}', 'destroy');
+    Route::delete('{conversation}', 'leave');
     Route::post('{conversation}/pin', 'pin');
     Route::post('{conversation}/unpin', 'unpin');
 
