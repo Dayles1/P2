@@ -81,17 +81,6 @@ class ConversationController extends Controller
         );
     }
 
-    public function destroy(Request $request, Conversation $conversation): JsonResponse
-    {
-        $this->deleteConversation->handle(
-            user: $request->user(),
-            conversation: $conversation
-        );
-
-        return $this->success(
-            message: __('messages.chat.deleted')
-        );
-    }
 
     public function pin(Conversation $conversation): JsonResponse
     {

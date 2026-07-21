@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Chat\Actions;
+namespace App\Domain\Chat\Actions\Members;
 
 use App\Domain\Chat\Enums\ConversationPermission;
 use App\Domain\Chat\Models\Conversation;
@@ -10,7 +10,7 @@ use App\Domain\Chat\Services\SystemMessageService;
 use App\Domain\Identity\Models\User;
 use Illuminate\Validation\ValidationException;
 
-class RemoveConversationMembers
+class AddConversationMembers
 {
     public function __construct(
         protected ConversationRepositoryInterface $repository,
@@ -19,51 +19,44 @@ class RemoveConversationMembers
     ) {
     }
 
-    public function handle(
-        User $actor,
-        Conversation $conversation,
-        array $userIds
-    ): array {
+    public function handle(User $actor, Conversation $conversation, array $userIds): array
+    {
         $this->permissionService->authorize(
             $actor,
             $conversation,
             ConversationPermission::MANAGE_MEMBERS
         );
 
-        if ($conversation->type === 'private') {
+        if (! in_array($conversation->type, ['group', 'channel'], true)) {
             throw ValidationException::withMessages([
-                'conversation' => __('messages.chat.cannot_remove_member_from_private_chat'),
+                'conversation' => __('messages.chat.cannot_add_member_to_private_chat'),
             ]);
         }
 
-        $result = $this->repository->removeMembers(
-            $conversation,
-            $userIds,
-            $actor->id
-        );
+        $result = $this->repository->addMembers($conversation, $userIds, $actor->id);
 
+        $targetIds = array_values(array_unique(array_merge(
+            $result['added'] ?? [],
+            $result['restored'] ?? []
+        )));
 
-        if ($result['removed'] !== []) {
-
+        if ($targetIds !== []) {
             $targets = User::query()
-                ->whereIn('id', $result['removed'])
+                ->whereIn('id', $targetIds)
                 ->get();
 
-
-            $message = $this->systemMessageService->deleteUsers(
+            $message = $this->systemMessageService->addUsers(
                 conversation: $conversation,
                 actor: $actor,
                 targets: $targets,
                 extra: $result,
             );
 
-
             $conversation->update([
                 'last_message_id' => $message->id,
                 'last_message_at' => $message->created_at,
             ]);
         }
-
 
         return $result;
     }

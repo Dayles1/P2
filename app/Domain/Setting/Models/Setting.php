@@ -20,6 +20,7 @@ class Setting extends Model
     public const GROUP_NOTIFICATION  = 'notification';
     public const GROUP_USER          = 'user';
     public const GROUP_SECURITY      = 'security';
+    public const GROUP_CHAT          = 'chat';
 
     protected $fillable = [
         'key',

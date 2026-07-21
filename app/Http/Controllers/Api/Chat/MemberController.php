@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\Chat;
 
-use App\Domain\Chat\Actions\AddConversationMembers;
-use App\Domain\Chat\Actions\RemoveConversationMembers;
+use App\Domain\Chat\Actions\Members\AddConversationMembers;
+use App\Domain\Chat\Actions\Members\RemoveConversationMembers;
 use App\Domain\Chat\Models\Conversation;
 use App\Domain\Chat\Queries\GetConversationMembersQuery;
 use App\Http\Controllers\Controller;

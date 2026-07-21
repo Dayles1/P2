@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\SessionController;
 use App\Http\Controllers\Api\Chat\ConversationController;
 use App\Http\Controllers\Api\Chat\MemberController;
+use App\Http\Controllers\Api\Chat\MessageController;
 use App\Http\Controllers\Api\Profile\AvatarController;
 use App\Http\Controllers\Api\Profile\UserSettingController;
 use App\Http\Controllers\Api\Setting\TimezoneController;
@@ -92,5 +93,11 @@ Route::middleware('auth:sanctum')->prefix('conversations')->controller(MemberCon
     Route::get('{conversation}/members', 'index');
     Route::post('{conversation}/members', 'store');
     Route::delete('{conversation}/members', 'destroy');
+});
+
+Route::middleware('auth:sanctum')->prefix('conversations')->controller(MessageController::class)->group(function () {
+    Route::get('{conversation}/messages', 'index');
+    Route::post('{conversation}/messages', 'store');
+    Route::delete('{conversation}/messages', 'destroy');
 });
 
