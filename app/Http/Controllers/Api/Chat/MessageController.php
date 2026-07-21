@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\Api\Chat;
 
+use App\Domain\Chat\Actions\Messages\SendMessage;
 use App\Domain\Chat\Models\Conversation;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\SendMessageRequest;
 use App\Http\Resources\CHat\MessageResource;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MessageController extends Controller
 {
     public function __construct(
-        
-    )
-    {
-
+        protected SendMessage $sendMessage,
+    ) {
     }
 
     public function index()
@@ -28,10 +26,9 @@ class MessageController extends Controller
         Conversation $conversation
     ): JsonResponse {
         $message = $this->sendMessage->handle(
-            actor: $request->user(),
+            user: $request->user(),
             conversation: $conversation,
-            data: $request->validated(),
-            files: $request->file('attachments', []),
+            data: $request->validated()
         );
 
         return $this->success(
