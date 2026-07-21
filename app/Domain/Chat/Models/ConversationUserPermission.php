@@ -22,6 +22,6 @@ class ConversationUserPermission extends Model
 
     public function conversationUser(): BelongsTo
     {
-        return $this->belongsTo(ConversationUser::class);
+        return $this->belongsTo(ConversationUser::class,'conversation_user_id','id');
     }
 }

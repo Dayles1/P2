@@ -39,7 +39,7 @@ class ConversationUser extends Pivot
             'is_pinned' => 'boolean',
             'is_hidden' => 'boolean',
             'notifications_enabled' => 'boolean',
-            
+
         ];
     }
 
@@ -55,6 +55,10 @@ class ConversationUser extends Pivot
 
     public function permissions(): HasMany
     {
-        return $this->hasMany(ConversationUserPermission::class);
+        return $this->hasMany(
+            ConversationUserPermission::class,
+            'conversation_user_id',
+            'id'
+        );
     }
 }

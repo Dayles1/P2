@@ -85,4 +85,5 @@ class Conversation extends Model
         return $this->morphOne(Attachment::class, 'attachable')
             ->where('collection', 'avatar');
     }
+    
 }
