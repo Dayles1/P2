@@ -3,14 +3,12 @@
 namespace App\Infrastructure\Persistence\Eloquent\Chat;
 
 use App\Domain\Attachment\Models\Attachment;
-use App\Domain\Chat\Enums\MessageType;
 use App\Domain\Chat\Models\Conversation;
 use App\Domain\Chat\Models\Message;
 use App\Domain\Chat\Repositories\MessageRepositoryInterface;
 use App\Domain\Identity\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
 class MessageRepository implements MessageRepositoryInterface
 {

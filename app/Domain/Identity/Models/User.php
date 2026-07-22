@@ -29,7 +29,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, RecordsAudits, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, RecordsAudits, SoftDeletes, Notifiable;
     protected $fillable = [
         'name',
         'email',
@@ -133,6 +133,10 @@ class User extends Authenticatable
             'personal_access_token_id',
             auth()->user()->currentAccessToken()->id
         );
+}
+public function receivesBroadcastNotificationsOn(): string
+{
+    return 'users.' . $this->id;
 }
 
 
