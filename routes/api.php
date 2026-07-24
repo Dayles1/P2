@@ -108,4 +108,7 @@ Route::middleware('auth:sanctum')->prefix('currency')->controller(CurrencyContro
 });
 Route::middleware('auth:sanctum')->prefix('exchange-rates')->controller(ExchangeRateController::class)->group(function () {
     Route::get('/', 'index');
+    Route::get('/favorites', 'favorites');
+    Route::put('/favorites', 'saveFavorites'); 
+
 });
