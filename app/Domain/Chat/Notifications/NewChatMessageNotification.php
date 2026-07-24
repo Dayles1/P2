@@ -13,7 +13,8 @@ class NewChatMessageNotification extends Notification
 
     public function __construct(
         protected Message $message,
-    ) {}
+    ) {
+    }
 
     public function via(object $notifiable): array
     {
@@ -38,5 +39,13 @@ class NewChatMessageNotification extends Notification
     public function toBroadcast(object $notifiable): BroadcastMessage
     {
         return new BroadcastMessage($this->toArray($notifiable));
+    }
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'message_id' => $this->message->id,
+            'conversation_id' => $this->message->conversation_id,
+            'body' => $this->message->body,
+        ];
     }
 }
