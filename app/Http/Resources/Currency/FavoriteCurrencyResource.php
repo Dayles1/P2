@@ -15,21 +15,28 @@ class FavoriteCurrencyResource extends JsonResource
         $formatter = app(UserDateFormatter::class);
 
         $user = $request->user();
+
         $preferredCode = $quotes->preferredCode($user);
         $systemBaseCode = $quotes->systemBaseCode();
 
-        $toPreferred = $quotes->quote($preferredCode, $this->code);
-        $toSystem = $quotes->quote($systemBaseCode, $this->code);
+        $id = $this->id;
+        $code = $this->code;
+        $name = $this->name;
+        $symbol = $this->symbol;
+        $position = $this->favorite_position ?? null;
+
+        $toPreferred = $quotes->quote($preferredCode, $code);
+        $toSystem = $quotes->quote($systemBaseCode, $code);
 
         return [
-            'id' => $this->id,
-            'position' => $this->favorite_position ?? null,
+            'id' => $id,
+            'position' => $position,
 
             'currency' => [
-                'id' => $this->id,
-                'code' => $this->code,
-                'name' => $this->name,
-                'symbol' => $this->symbol,
+                'id' => $id,
+                'code' => $code,
+                'name' => $name,
+                'symbol' => $symbol,
             ],
 
             'base' => [
@@ -38,26 +45,44 @@ class FavoriteCurrencyResource extends JsonResource
             ],
 
             'value' => [
-                '1_' . strtolower($preferredCode) . '_in_' . strtolower($this->code) => $toPreferred['one_from_in_to'],
-                '1_' . strtolower($this->code) . '_in_' . strtolower($preferredCode) => $toPreferred['one_to_in_from'],
+                'rate_from_preferred' => $this->formatRate($toPreferred['one_from_in_to']),
+                'rate_to_preferred' => $this->formatRate($toPreferred['one_to_in_from']),
+                'rate_from_system' => $this->formatRate($toSystem['one_from_in_to']),
+                'rate_to_system' => $this->formatRate($toSystem['one_to_in_from']),
             ],
 
             'comparison' => [
                 'preferred_to_currency' => [
                     'from' => $toPreferred['from_code'],
                     'to' => $toPreferred['to_code'],
-                    'rate' => $toPreferred['one_from_in_to'],
-                    'inverse_rate' => $toPreferred['one_to_in_from'],
+                    'rate' => $this->formatRate($toPreferred['one_from_in_to']),
+                    'inverse_rate' => $this->formatRate($toPreferred['one_to_in_from']),
                 ],
                 'system_to_currency' => [
                     'from' => $toSystem['from_code'],
                     'to' => $toSystem['to_code'],
-                    'rate' => $toSystem['one_from_in_to'],
-                    'inverse_rate' => $toSystem['one_to_in_from'],
+                    'rate' => $this->formatRate($toSystem['one_from_in_to']),
+                    'inverse_rate' => $this->formatRate($toSystem['one_to_in_from']),
                 ],
             ],
 
-            'synced_at' => $formatter->format($this->synced_at ?? now(), $user),
+            'synced_at' => $formatter->format(
+                $this->exchange_rate_synced_at ?? now(),
+                $user
+            ),
         ];
+    }
+
+    private function formatRate(float|null $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        return match (true) {
+            $value >= 100 => number_format($value, 2, '.', ''),
+            $value >= 1 => number_format($value, 4, '.', ''),
+            default => number_format($value, 6, '.', ''),
+        };
     }
 }
