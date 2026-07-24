@@ -14,6 +14,7 @@ class UserSetting extends Model
         'timezone_id',
         'timezone_source',
         'preferred_currency_id',
+        'favorite_currency_ids',
         'locale',
         'theme',
         'date_format',
@@ -24,6 +25,7 @@ class UserSetting extends Model
     protected function casts(): array
     {
         return [
+            'favorite_currency_ids' => 'array',
             'meta' => 'array',
         ];
     }
@@ -37,8 +39,14 @@ class UserSetting extends Model
     {
         return $this->belongsTo(Timezone::class);
     }
-    public function preferredCurrency()
+
+    public function preferredCurrency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'preferred_currency_id');
+    }
+
+    public function favoriteCurrencyIds(): array
+    {
+        return array_values(array_filter($this->favorite_currency_ids ?? []));
     }
 }

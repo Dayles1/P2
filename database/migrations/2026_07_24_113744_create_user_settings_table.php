@@ -21,6 +21,7 @@ return new class extends Migration
 
 
             $table->foreignId('preferred_currency_id')->nullable()->constrained('currencies')->nullOnDelete();
+            $table->json('favorite_currency_ids')->nullable();
 
             $table->string('locale', 20)->nullable();
             $table->string('theme', 20)->nullable()->default('system');
