@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             TimezoneSeeder::class,
             SuperAdminSeeder::class,
             SettingSeeder::class,
+            CurrencySeeder::class,
         ]);
     }
 }

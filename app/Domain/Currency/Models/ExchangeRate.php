@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ExchangeRate extends Model
 {
     protected $fillable = [
-        'code',
+        'currency_id',
         'base',
         'rate',
         'source',
@@ -19,4 +19,9 @@ class ExchangeRate extends Model
         'rate' => 'decimal:6',
         'synced_at' => 'datetime',
     ];
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
+    }
 }

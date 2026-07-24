@@ -2,6 +2,7 @@
 
 namespace App\Domain\Identity\Models;
 
+use App\Domain\Currency\Models\Currency;
 use App\Domain\Setting\Models\Timezone;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,5 +36,9 @@ class UserSetting extends Model
     public function timezone(): BelongsTo
     {
         return $this->belongsTo(Timezone::class);
+    }
+    public function preferredCurrency()
+    {
+        return $this->belongsTo(Currency::class, 'preferred_currency_id');
     }
 }

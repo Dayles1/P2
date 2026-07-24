@@ -19,6 +19,9 @@ return new class extends Migration
             $table->foreignId('timezone_id')->nullable()->constrained('timezones')->nullOnDelete();
             $table->string('timezone_source', 20)->nullable()->default('manual');
 
+
+            $table->foreignId('preferred_currency_id')->nullable()->constrained('currencies')->nullOnDelete();
+
             $table->string('locale', 20)->nullable();
             $table->string('theme', 20)->nullable()->default('system');
             $table->string('date_format', 50)->nullable();
