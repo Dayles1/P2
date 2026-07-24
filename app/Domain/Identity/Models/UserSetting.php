@@ -6,7 +6,6 @@ use App\Domain\Currency\Models\Currency;
 use App\Domain\Setting\Models\Timezone;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class UserSetting extends Model
 {

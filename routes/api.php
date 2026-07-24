@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\Auth\SessionController;
 use App\Http\Controllers\Api\Chat\ConversationController;
 use App\Http\Controllers\Api\Chat\MemberController;
 use App\Http\Controllers\Api\Chat\MessageController;
+use App\Http\Controllers\Api\Currency\CurrencyController;
+use App\Http\Controllers\Api\Currency\ExchangeRateController;
 use App\Http\Controllers\Api\Profile\AvatarController;
 use App\Http\Controllers\Api\Profile\UserSettingController;
 use App\Http\Controllers\Api\Setting\TimezoneController;
@@ -101,3 +103,9 @@ Route::middleware('auth:sanctum')->prefix('conversations')->controller(MessageCo
     Route::delete('{conversation}/messages', 'destroy');
 });
 
+Route::prefix('currency')->controller(CurrencyController::class)->group(function () {
+    Route::get('/', 'index');
+});
+Route::prefix('exchange-rates')->controller(ExchangeRateController::class)->group(function () {
+    Route::get('/', 'index');
+});

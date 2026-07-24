@@ -15,7 +15,7 @@ class CurrencySyncService
 
     private const CURRENCY_NAMES = [
         'USD' => 'US Dollar',
-        'UZS' => 'Uzbek Soum',
+        'UZS' => 'Uzbek So`m',
         'EUR' => 'Euro',
         'RUB' => 'Russian Ruble',
         'TRY' => 'Turkish Lira',
