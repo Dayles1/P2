@@ -31,6 +31,10 @@ class UpdateUserSettingRequest extends FormRequest
                 'string',
                 'max:10',
             ],
+            'preferred_currency_id' => [
+                'nullable',
+                'exists:currencies,id'
+            ],
 
             'theme' => [
                 'nullable',

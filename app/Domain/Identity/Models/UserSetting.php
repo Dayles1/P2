@@ -13,6 +13,7 @@ class UserSetting extends Model
         'user_id',
         'timezone_id',
         'timezone_source',
+        'preferred_currency_id',
         'locale',
         'theme',
         'date_format',

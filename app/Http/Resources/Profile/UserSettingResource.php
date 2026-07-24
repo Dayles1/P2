@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Profile;
 
+use App\Http\Resources\Currency\CurrencyResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,9 @@ class UserSettingResource extends JsonResource
                 'label' => $this->timezone->label,
                 'offset' => $this->timezone->offset,
             ] : null,
+            'preferredCurrency' => $this->relationLoaded('preferredCurrency')
+                ? new CurrencyResource($this->preferredCurrency)
+                : null,
             'timezone_source' => $this->timezone_source,
             'locale' => $this->locale,
             'theme' => $this->theme,

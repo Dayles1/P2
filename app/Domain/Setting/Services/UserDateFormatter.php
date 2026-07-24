@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class UserDateFormatter
 {
-    public function format(?Carbon $date, ?User $user): ?string
+    public function format(?Carbon $date, ?User $user ): ?string
     {
         if (!$date) {
             return null;

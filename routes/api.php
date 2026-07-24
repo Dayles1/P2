@@ -103,9 +103,9 @@ Route::middleware('auth:sanctum')->prefix('conversations')->controller(MessageCo
     Route::delete('{conversation}/messages', 'destroy');
 });
 
-Route::prefix('currency')->controller(CurrencyController::class)->group(function () {
+Route::middleware('auth:sanctum')->prefix('currency')->controller(CurrencyController::class)->group(function () {
     Route::get('/', 'index');
 });
-Route::prefix('exchange-rates')->controller(ExchangeRateController::class)->group(function () {
+Route::middleware('auth:sanctum')->prefix('exchange-rates')->controller(ExchangeRateController::class)->group(function () {
     Route::get('/', 'index');
 });

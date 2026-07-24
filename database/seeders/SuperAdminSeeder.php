@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Domain\AccessControl\Models\Role;
+use App\Domain\Currency\Models\Currency;
 use App\Domain\Identity\Models\User;
 use App\Domain\Identity\Models\UserSetting;
 use App\Domain\Setting\Models\Timezone;
@@ -23,6 +24,8 @@ class SuperAdminSeeder extends Seeder
 
         $timezone = Timezone::where('name', 'Asia/Tashkent')
             ->first();
+        $currency=Currency::where('code','USD')
+            ->first();
 
         UserSetting::updateOrCreate(
             [
@@ -31,6 +34,7 @@ class SuperAdminSeeder extends Seeder
             [
                 'timezone_id' => $timezone?->id,
                 'timezone_source' => 'manual',
+                'preferred_currency_id'=> $currency->id ?? 1
             ]
         );
 
